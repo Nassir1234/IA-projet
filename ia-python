@@ -1,0 +1,47 @@
+from sklearn import datasets
+import matplotlib.pyplot as plt
+from sklearn.neural_network import MLPClassifier
+import numpy as np
+digits = datasets.load_digits()
+
+'''print(digits.images[0])''' 
+''''requete qui sert à obtenir la matrice correspondante'''
+'''la requete en dessous sert à afficher sous forme de pixels 8x8 la matrice'''
+plt.imshow(digits.images[65],cmap='binary')
+plt.title(digits.target[65])
+plt.axis('off')
+plt.show()
+
+'''il faut convertir les images 2D en images 1D, sous forme de tableau
+de 8x8 valeurs soit 64 valeurs'''
+x = digits.images.reshape((len(digits.images),-1))
+''''print(x[0])'''
+
+y = digits.target #correspond à l'estimation des chiffres de la matrice
+
+mlp = MLPClassifier(hidden_layer_sizes=(15,), max_iter=400)
+''' Creation juste au dessus du reseau de 'neurones' de notre ia (15 neuronnes)'''
+
+x_train = x[:1000]
+y_train = y[:1000]
+x_test = x[1000:]
+y_test = y[1000:] #on va faire 1000 tests pour élaborer l'ia et devenir plus précise
+mlp.fit(x_train, y_train) #demarrage de l entrainement
+'''print(len(digits.images)) pour obtenir le nombre de donnees utilisable dans
+la base de donnees'''
+
+'''print(mlp.predict(x_test[:10]))
+print(y_test[:10]) on a bien donc les bonnes predictions, 
+notre ia fonctionne parfaitement'''
+
+y_pred = mlp.predict(x_test)
+erreur = (y_pred != y_test)
+'''print(np.sum(erreur) / len(y_test))'''
+
+def cherche_erreur(matrice):
+    compteur = 0
+    for c in matrice:
+        compteur += 1
+        if c == True:
+            return compteur
+print(cherche_erreur(erreur))
